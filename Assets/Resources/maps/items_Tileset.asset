@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afb902cdc0a46654c934cc2a76228e4a, type: 3}
+  m_Name: items_Tileset
+  m_EditorClassIdentifier: 
+  m_textFile: {fileID: 4900000, guid: 4a6409524cc2e26408e69d9358996704, type: 3}
+  m_tileSetName: items
+  m_image: {fileID: 2800000, guid: b500faf46695369459c8b9b91d472fea, type: 3}
+  m_imagePath: images/items.png

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="32" tileheight="32" nextobjectid="1">
+ <imagelayer name="laralalala" opacity="0.5">
+  <image source="images/logo3.png"/>
+ </imagelayer>
+</map>
