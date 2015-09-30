@@ -66,10 +66,10 @@ public class PlatformerPlayerControl : MonoBehaviour
     private float m_gravity;
     private float m_initialJumpSpeed;
     private float m_jumpTermVelocity;
-    private float m_jumpTermTime;
+    //private float m_jumpTermTime;
     //------------------------------------
 
-    private Rect m_collisionArea;
+    //private Rect m_collisionArea;
 
     private bool m_wasGrounded;
     private bool m_grounded;
@@ -77,8 +77,8 @@ public class PlatformerPlayerControl : MonoBehaviour
     private bool m_jumping;
     private bool m_wasJumping;
     private int m_jumpCount;
-    private float m_jumpingTime;
-    private bool m_onAir;
+    //private float m_jumpingTime;
+    //private bool m_onAir;
 
 
     private bool m_facingRight;
@@ -91,13 +91,12 @@ public class PlatformerPlayerControl : MonoBehaviour
     private Vector2 m_velocity;
 
     //----------
-    private Ray[] m_groundRays;
+    //private Ray[] m_groundRays;
     private BoxCollider2D m_collider;
 
 	// Use this for initialization
 	void Start () 
     {
-        m_collisionArea = new Rect();
         m_velocity = Vector2.zero;
 
         if (transform.position.y < 0.0f)
@@ -114,8 +113,6 @@ public class PlatformerPlayerControl : MonoBehaviour
 
         m_facingRight = true;
         m_jumpCount = 0;
-        m_jumpingTime = 0.0f;
-        m_onAir = false;
         
         m_collider = GetComponent<BoxCollider2D>();
 	}
@@ -405,5 +402,14 @@ public class PlatformerPlayerControl : MonoBehaviour
         m_initialJumpSpeed = Mathf.Sqrt(2 * m_gravity * m_maxHeight);
 
         m_jumpTermVelocity = Mathf.Sqrt(m_initialJumpSpeed * m_initialJumpSpeed - 2 * m_gravity * (m_maxHeight - m_minHeight));
+    }
+
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<CarrotTest>() != null)
+        {
+            collision.GetComponent<CarrotTest>().KillMe();
+        }
     }
 }
