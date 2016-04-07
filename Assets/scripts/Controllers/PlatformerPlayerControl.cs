@@ -99,10 +99,10 @@ public class PlatformerPlayerControl : MonoBehaviour
     {
         m_velocity = Vector2.zero;
 
-        if (transform.position.y < 0.0f)
-        {
-            transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
-        }
+        //if (transform.position.y < 0.0f)
+        //{
+        //    transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        //}
         CalculateJumpVars();
         DetectGround();
         m_wasGrounded = m_grounded;
@@ -310,62 +310,44 @@ public class PlatformerPlayerControl : MonoBehaviour
 
     private void DetectGround()
     {
-        if (m_grounded || m_falling)
+        if (!m_grounded && !m_falling) return;
+
+        bool foundGround = false;
+        Vector2 origin = (Vector2)transform.position + m_collider.offset;
+        origin.x -= m_collider.size.x * 0.5f;
+        RaycastHit2D[] raycasts = new RaycastHit2D[m_vertRaysCount];
+        float minDistance = Mathf.Infinity;
+        int idx = -1;
+
+        float rayDelta = m_collider.size.x / (m_vertRaysCount - 1);
+        float rayDistance = m_collider.size.y * 0.65f;
+        for (int i = 0; i < m_vertRaysCount; ++i)
         {
-            bool foundGround = false;
-            Vector2 origin = (Vector2)transform.position + m_collider.offset;
-            origin.x -= m_collider.size.x * 0.5f;
-            RaycastHit2D[] raycasts = new RaycastHit2D[m_vertRaysCount];
-            float minDistance = Mathf.Infinity;
-            int idx = -1;
-
-            float rayDelta = m_collider.size.x / (m_vertRaysCount - 1);
-            float rayDistance = m_collider.size.y * 0.6f;
-            for (int i = 0; i < m_vertRaysCount; ++i)
+            //-Debug.DrawRay(origin, Vector2.down * rayDistance, Color.green, 0.4f);
+            raycasts[i] = Physics2D.Raycast(origin, Vector2.down, rayDistance, RaycastLayers.normalCollisions);
+            if (raycasts[i].collider != null)
             {
-                //-Debug.DrawRay(origin, Vector2.down * rayDistance, Color.green, 0.4f);
-                raycasts[i] = Physics2D.Raycast(origin, Vector2.down, rayDistance, RaycastLayers.normalCollisions);
-                if (raycasts[i].collider != null)
+                foundGround = true;
+                if (raycasts[i].distance < minDistance)
                 {
-                    foundGround = true;
-                    if (raycasts[i].distance < minDistance)
-                    {
-                        minDistance = raycasts[i].distance;
-                        idx = i;
-                    }
+                    minDistance = raycasts[i].distance;
+                    idx = i;
                 }
-                origin.x += rayDelta;
             }
-            if (foundGround)
-            {
-                //bool onSlope = false;
-                //RaycastHit2D first = raycasts[0];
-                //RaycastHit2D last = raycasts[raycasts.Length - 1];
-                //bool testFirst = TestSlope(first);
-                //bool testLast = TestSlope(last);
-                //onSlope = (testFirst && testLast) || ((testFirst && (last.collider == null || first.point.y > last.point.y)) || (testLast && (first.collider == null || last.point.y > first.point.y)));
+            origin.x += rayDelta;
+        }
+        if (foundGround)
+        {
+            transform.Translate(Vector2.down * (minDistance - m_collider.size.y * 0.5f));
 
-                //if (onSlope)
-                //{
-                //    origin.x = transform.position.x + m_collider.offset.x;
-                //    RaycastHit2D midPoint = Physics2D.Raycast(origin, Vector2.down, 2 * m_collider.size.y, RaycastLayers.normalCollisions);
-                //    if (midPoint.collider != null)
-                //    {
-                //        minDistance = midPoint.distance;
-                //    }
-                //}
-
-                transform.Translate(Vector2.down * (minDistance - m_collider.size.y * 0.5f));
-
-                m_velocity.y = 0.0f;
-                m_jumpCount = 0;
-                m_grounded = true;
-                m_falling = false;
-            }
-            else
-            {
-                m_grounded = false;
-            }
+            m_velocity.y = 0.0f;
+            m_jumpCount = 0;
+            m_grounded = true;
+            m_falling = false;
+        }
+        else
+        {
+            m_grounded = false;
         }
 
     }
